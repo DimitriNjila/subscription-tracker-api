@@ -6,13 +6,14 @@ import subscriptionRouter from './routes/subscription.routes.js';
 import connectToDatabase from './DB/mongodb.js';
 import errorMiddleware from './middlewares/error.middleware.js';
 import cookieParser from 'cookie-parser';
+import logger from './config/logger.js';
 
 const app = express();
 
 // Middleware to parse JSON and URL-encoded data and cookies
 app.use(express.json());
 app.use(express.urlencoded({ extended: false }));
-app.use(cookieParser)
+app.use(cookieParser())
 
 // Routes
 app.use('/api/v1/auth', authRouter);
@@ -28,10 +29,16 @@ app.get('/', (req, res) => {
 });
 
 // Start the server and connect to the database
-app.listen( PORT, async () => {
-    console.log(`Server is running on port ${PORT}`);
+app.listen(PORT, async () => {
+  logger.info(`Server is running on port ${PORT}`);
+
+  try {
     await connectToDatabase();
-})
+    logger.info("Connected to DB");
+  } catch (err) {
+    logger.error("DB connection failed:", err);
+  }
+});
 
 export default app;
 

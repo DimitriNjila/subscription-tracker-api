@@ -1,5 +1,4 @@
-import pino from "pino";
-const logger = pino({})
+import logger from '../config/logger.js';
 
 //API flow: Create a subscription -> middleware (check for renewal date) -> middleware (check for errors) -> next -> controller
 
